@@ -17,7 +17,7 @@ class TransactionServiceTest {
 
     @Autowired
     private TransactionService transactionService;
-    private static final int THREAD_COUNT = 10;
+    private static final int THREAD_COUNT = 20;
 
     @Test
     @Transactional
@@ -30,8 +30,8 @@ class TransactionServiceTest {
         for(int i = 0; i < THREAD_COUNT; i++) {
             executorService.execute(() -> {
                 transactionService.transaction();
+                latch.countDown();
             });
-            latch.countDown();
         }
         latch.await();
     }

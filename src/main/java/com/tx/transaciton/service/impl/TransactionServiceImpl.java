@@ -23,9 +23,11 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @Override
     public Integer transaction() {
-        log.debug("transaction");
+        log.info("transaction");
         Integer topCount = transactionRepository.findTopCount()
                 .orElse(0);
+
+        log.info("Top Count: {}", topCount);
 
         Transaction entity = Transaction.builder()
                 .transactionType(TransactionType.REQUEST)
