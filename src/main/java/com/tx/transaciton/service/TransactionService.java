@@ -1,6 +1,11 @@
 package com.tx.transaciton.service;
 
+import com.tx.transaciton.vo.req.TransactionRequest;
+import com.tx.transaciton.vo.res.TransactionResponse;
+
 public interface TransactionService {
 
-    Integer transaction();
+    TransactionResponse create();
+
+    TransactionResponse transaction(TransactionRequest transactionRequest);
 }

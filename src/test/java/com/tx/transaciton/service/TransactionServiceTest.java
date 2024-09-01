@@ -1,5 +1,7 @@
 package com.tx.transaciton.service;
 
+import com.tx.transaciton.vo.req.TransactionRequest;
+import com.tx.transaciton.vo.res.TransactionResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,12 @@ class TransactionServiceTest {
 
         for(int i = 0; i < THREAD_COUNT; i++) {
             executorService.execute(() -> {
-                transactionService.transaction();
+                TransactionResponse transactionResponse = transactionService.create();
+
+                TransactionRequest transactionRequest = new TransactionRequest();
+                transactionRequest.setId(transactionResponse.getId());
+                TransactionResponse transaction = transactionService.transaction(transactionRequest);
+
                 latch.countDown();
             });
         }

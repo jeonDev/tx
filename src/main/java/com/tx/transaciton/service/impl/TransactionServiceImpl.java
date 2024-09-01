@@ -3,9 +3,12 @@ package com.tx.transaciton.service.impl;
 import com.tx.transaciton.entity.Transaction;
 import com.tx.transaciton.repo.TransactionJpaRepository;
 import com.tx.transaciton.service.TransactionService;
+import com.tx.transaciton.vo.req.TransactionRequest;
+import com.tx.transaciton.vo.res.TransactionResponse;
 import com.tx.transaciton.type.TransactionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -20,8 +23,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    synchronized public Integer transaction() {
-        log.info("transaction");
+    synchronized public TransactionResponse create() {
+        log.info("transaction create");
         Integer topCount = transactionRepository.findMaxCount();
 
         log.info("Top Count: {}", topCount);
@@ -32,6 +35,24 @@ public class TransactionServiceImpl implements TransactionService {
                 .count(topCount + 1)
                 .build();
         entity = transactionRepository.save(entity);
-        return entity.getCount();
+        return TransactionResponse.builder()
+                .id(entity.getId())
+                .count(entity.getCount())
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public TransactionResponse transaction(TransactionRequest transactionRequest) {
+        log.info("transaction");
+        Transaction entity = transactionRepository.findById(transactionRequest.getId())
+                .complete();
+
+        transactionRepository.save(entity);
+
+        return TransactionResponse.builder()
+                .id(entity.getId())
+                .count(entity.getCount())
+                .build();
     }
 }

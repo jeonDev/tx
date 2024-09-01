@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 
 @Entity
 @Getter
+@DynamicUpdate
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -31,4 +33,9 @@ public class Transaction {
 
     @Column(name = "AMOUNT")
     private BigDecimal amount;
+
+    public Transaction complete() {
+        this.transactionType = TransactionType.COMPLETE;
+        return this;
+    }
 }
