@@ -22,7 +22,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public Integer transaction() {
+    // row lock X
+    synchronized public Integer transaction() {
         log.info("transaction");
         Integer topCount = transactionRepository.findTopCount()
                 .orElse(0);
@@ -34,7 +35,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(BigDecimal.TEN)
                 .count(topCount + 1)
                 .build();
-        entity = transactionRepository.save(entity);
+        // TODO: commit 시점 전에 다음 메소드 호출
+        entity = transactionRepository.saveAndFlush(entity);
         return entity.getCount();
     }
 }
