@@ -1,12 +1,11 @@
 package com.tx.transaciton.service.impl;
 
 import com.tx.transaciton.entity.Transaction;
-import com.tx.transaciton.repo.TransactionRepository;
+import com.tx.transaciton.repo.TransactionJpaRepository;
 import com.tx.transaciton.service.TransactionService;
 import com.tx.transaciton.type.TransactionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -14,19 +13,16 @@ import java.math.BigDecimal;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionJpaRepository transactionRepository;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+    public TransactionServiceImpl(TransactionJpaRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
-    @Transactional
     @Override
-    // row lock X
     synchronized public Integer transaction() {
         log.info("transaction");
-        Integer topCount = transactionRepository.findTopCount()
-                .orElse(0);
+        Integer topCount = transactionRepository.findMaxCount();
 
         log.info("Top Count: {}", topCount);
 
@@ -35,8 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(BigDecimal.TEN)
                 .count(topCount + 1)
                 .build();
-        // TODO: commit 시점 전에 다음 메소드 호출
-        entity = transactionRepository.saveAndFlush(entity);
+        entity = transactionRepository.save(entity);
         return entity.getCount();
     }
 }
