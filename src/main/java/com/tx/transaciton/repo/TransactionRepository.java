@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
 
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Transaction> findByIdAndTransactionType(Long id, TransactionType transactionType);
 
     @Query("SELECT MAX(t.count) FROM Transaction t")
