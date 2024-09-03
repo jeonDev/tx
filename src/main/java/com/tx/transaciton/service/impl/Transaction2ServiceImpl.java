@@ -31,6 +31,7 @@ public class Transaction2ServiceImpl implements TransactionService {
                 .build();
     }
 
+    // TODO: @Transactional을 지우면 -> readonly 트랜잭션으로 수정 불가 ???
     @Transactional
     @Override
     public TransactionResponse transaction(TransactionRequest transactionRequest) {
