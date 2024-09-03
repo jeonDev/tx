@@ -35,9 +35,18 @@ public class Transaction2ServiceImpl implements TransactionService {
     @Transactional
     @Override
     public TransactionResponse transaction(TransactionRequest transactionRequest) {
-        log.info("transaction : {}", transactionRequest.getId());
+        log.info("transaction1 : {}", transactionRequest.toString());
         Transaction2 entity = transactionRepository.findById(transactionRequest.getId())
                 .orElseThrow(() -> new IllegalArgumentException("No Entity"));
+        log.info("transaction select : {}", entity.getId());
+        try {
+            if (transactionRequest.isOk()) {
+                Thread.sleep(5000);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("transaction2 : {}", transactionRequest.toString());
 
         entity.complete();
 

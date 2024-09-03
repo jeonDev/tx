@@ -24,7 +24,7 @@ class Transaction2ServiceImplTest {
     @Autowired
     private TransactionService transactionService2;
 
-    private static final int THREAD_COUNT = 4;
+    private static final int THREAD_COUNT = 2;
 
     @Test
     @Transactional
@@ -40,8 +40,16 @@ class Transaction2ServiceImplTest {
 
                 TransactionRequest transactionRequest = new TransactionRequest();
                 transactionRequest.setId(transactionResponse.getId());
+                transactionRequest.setOk(false);
                 if (transactionResponse.getId() % 2 == 0) {
                     transactionRequest.setId(transactionResponse.getId() - 1L);
+                    transactionRequest.setOk(true);
+                } else {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 TransactionResponse transaction = transactionService2.transaction(transactionRequest);
                 log.info("End : {}", transaction.getId());
