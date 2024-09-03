@@ -1,5 +1,6 @@
-package com.tx.transaciton.service;
+package com.tx.transaciton.service.impl;
 
+import com.tx.transaciton.service.TransactionService;
 import com.tx.transaciton.vo.req.TransactionRequest;
 import com.tx.transaciton.vo.res.TransactionResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
 class TransactionServiceTest {
 
     @Autowired
-    private TransactionService transactionService;
+    private TransactionService transactionService1;
     private static final int THREAD_COUNT = 20;
 
     @Test
@@ -31,11 +32,11 @@ class TransactionServiceTest {
 
         for(int i = 0; i < THREAD_COUNT; i++) {
             executorService.execute(() -> {
-                TransactionResponse transactionResponse = transactionService.create();
+                TransactionResponse transactionResponse = transactionService1.create();
 
                 TransactionRequest transactionRequest = new TransactionRequest();
                 transactionRequest.setId(transactionResponse.getId());
-                TransactionResponse transaction = transactionService.transaction(transactionRequest);
+                TransactionResponse transaction = transactionService1.transaction(transactionRequest);
 
                 latch.countDown();
             });

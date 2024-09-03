@@ -16,16 +16,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "TRANSACTION")
-public class Transaction {
+@Table(name = "TRANSACTION2")
+public class Transaction2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-
-    @Column(name = "COUNT")
-    private Integer count;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TRANSACTION_TYPE")
@@ -34,7 +31,7 @@ public class Transaction {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    public Transaction complete() {
+    public Transaction2 complete() {
         this.transactionType = TransactionType.COMPLETE;
         return this;
     }

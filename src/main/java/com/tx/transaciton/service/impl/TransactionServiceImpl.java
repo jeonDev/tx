@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 
 @Slf4j
-@Service
+@Service("transactionService1")
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionJpaRepository transactionRepository;
